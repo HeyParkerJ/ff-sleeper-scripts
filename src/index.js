@@ -1,16 +1,15 @@
 import 'dotenv/config';
 import { fetchMatchups, fetchRosters, fetchUsers } from './http/index';
 
-const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS' ? true : false;
+const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS'
+  || process.env.NODE_ENV === 'PROD'
+  ? true
+  : false;
 
+// TODO - Use streams?
 // const dest = fs.createWriteStream('./octocat.png');
 // res.body.pipe(dest);
 
-// Mine should be (120.4 + 117.64 + 163.5 + 140.34) / 4 = 135.47
-// total points = 541.88
-// user_id = 196325691560562688
-// roster_id: 6
-// [1, 3, 4, 7]
 const init = async () => {
   console.log('Initializing!');
 
