@@ -2,3 +2,5 @@
 ** TODO - Add Express, expose endpoints
 ** TODO - Add slack integration
 ** TODO - Convert to typescript
+** TODO - Clean git history
+** TODO - Add ranks and ordering to averagePFPerOutcome output
