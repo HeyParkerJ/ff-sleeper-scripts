@@ -5,18 +5,23 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",
+    "dev": "NODE_ENV=DEV nodemon --exec babel-node src/index.js",
+    "write:mocks": "NODE_ENV=WRITE_MOCKS nodemon --exec babel-node src/index.js",
     "test": "echo \"No test specified\" && exit 0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/node": "^7.2.2",
-    "@babel/preset-env": "^7.2.3",
-    "nodemon": "^1.18.9"
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.9.0",
+    "@babel/node": "^7.8.7",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.9.5",
+    "nodemon": "^1.19.4"
   },
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "node-fetch": "^2.6.1"
   }
 }
