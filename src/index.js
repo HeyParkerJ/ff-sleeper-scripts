@@ -16,6 +16,7 @@ const init = async () => {
   const data = {
     matchups: matchups,
     rosters: rosters,
+    users: users,
   }
   console.log('got all data!!')
   doCalculations(data);
@@ -26,7 +27,7 @@ const doCalculations = (data) => {
   console.log('AverageScorePerLoss:', averageScorePerLoss)
 };
 
-const calculateAverageScorePerLoss = ({ matchups, rosters }) => {
+const calculateAverageScorePerLoss = ({ matchups, rosters, users }) => {
   // TODO move this to a util file
   const allIndiciesOf = (array, element, increment) => {
     var indices = [];
@@ -53,20 +54,26 @@ const calculateAverageScorePerLoss = ({ matchups, rosters }) => {
     }, 0)
 
     const averageScorePerLoss = totalScored / weeksLost.length;
-    results.push({ roster_id: rosterId, averageScorePerLoss: averageScorePerLoss })
+    const userId = roster.owner_id;
+    results.push({ userId: userId, averageScorePerLoss: averageScorePerLoss })
   }
 
-  const prettifiedResults = replaceRosterIdWithPlayerName(results);
+  const prettifiedResults = replaceUserIdWithTeamName(results, users);
   return prettifiedResults;
 };
 
 /*
- * Needs an array of objects with a rosterId: roster_id field
+ * Needs an array of objects with a userId: userId field
  */
-const replaceRosterIdWithPlayerName = (arr) => {
-  return arr;
-  // arr.map((a) => {
-
-  // })
+const replaceUserIdWithTeamName = (arr, users) => {
+  return arr.map((a) => {
+    const teamName = users[a.userId].metadata.team_name;
+    const displayName = users[a.userId].display_name;
+    const name = teamName ? teamName : displayName;
+    return {
+      team: name,
+      averageScorePerLoss: a.averageScorePerLoss.toFixed(2),
+    }
+  })
 };
 init();
