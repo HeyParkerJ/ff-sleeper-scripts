@@ -1,7 +1,7 @@
 import path from 'path';
 import fs from 'fs';
 
-const validFileNames = ['matchups', 'rosters'];
+const validFileNames = ['matchups', 'rosters', 'users'];
 
 const validateFileName = (mockFileType) => {
     if (!validFileNames.includes(mockFileType)) {

@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { fetchMatchups, fetchRosters } from './http/index';
+import { fetchMatchups, fetchRosters, fetchUsers } from './http/index';
 
 const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS' ? true : false;
 
@@ -11,6 +11,7 @@ const init = async () => {
 
   const matchups = await fetchMatchups(useHttp);
   const rosters = await fetchRosters(useHttp);
+  const users = await fetchUsers(useHttp);
 
   const data = {
     matchups: matchups,
@@ -46,7 +47,6 @@ const calculateAverageScorePerLoss = ({ matchups, rosters }) => {
     const roster = rosters[rosterId];
     const record = roster.metadata.record;
     const weeksLost = allIndiciesOf(record.split(''), 'L', true);
-    console.log('weeksLost', weeksLost)
     const totalScored = weeksLost.reduce((acc, week) => {
       acc = acc + matchups[week][0].points;
       return acc;
@@ -55,8 +55,18 @@ const calculateAverageScorePerLoss = ({ matchups, rosters }) => {
     const averageScorePerLoss = totalScored / weeksLost.length;
     results.push({ roster_id: rosterId, averageScorePerLoss: averageScorePerLoss })
   }
-  return results;
+
+  const prettifiedResults = replaceRosterIdWithPlayerName(results);
+  return prettifiedResults;
 };
 
-const replaceRosterIdWithPlayerName = () => { };
+/*
+ * Needs an array of objects with a rosterId: roster_id field
+ */
+const replaceRosterIdWithPlayerName = (arr) => {
+  return arr;
+  // arr.map((a) => {
+
+  // })
+};
 init();
