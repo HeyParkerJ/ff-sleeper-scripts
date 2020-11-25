@@ -7,8 +7,6 @@ const httpFetchRosters = async () => {
     const rostersData = await response.json();
     const rosters = rostersData.reduce((acc, d) => {
         const key = d['roster_id']
-        console.log('acc', acc)
-        console.log('key', key, typeof key)
         acc[key] = d;
         return acc;
     }, {})

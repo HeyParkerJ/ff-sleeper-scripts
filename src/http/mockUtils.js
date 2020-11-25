@@ -3,14 +3,14 @@ import fs from 'fs';
 
 const validFileNames = ['matchups', 'rosters'];
 
-const validateFileName = (mockFileName) => {
-    if (!validFileNames.includes(mockFileName)) {
-        throw new Error('MockFileName is not supported:', mockFileName)
+const validateFileName = (mockFileType) => {
+    if (!validFileNames.includes(mockFileType)) {
+        throw new Error('MockFileName is not supported:', mockFileType)
     }
 }
 
-const mockFetchData = (mockFileName) => {
-    validateFileName(mockFileName)
+const mockFetchData = (mockFileType) => {
+    validateFileName(mockFileType)
     const data = fs.readFileSync(
         path.resolve(__dirname, `../mocks/${mockFileType}.json`),
         'utf-8',
@@ -19,10 +19,10 @@ const mockFetchData = (mockFileName) => {
     return jsonData;
 };
 
-const writeMockData = (data, mockFileName) => {
-    validateFileName(mockFileName)
+const writeMockData = (data, mockFileType) => {
+    validateFileName(mockFileType)
     fs.writeFileSync(
-        path.resolve(__dirname, `../mocks/${mockFileName}.json`),
+        path.resolve(__dirname, `../mocks/${mockFileType}.json`),
         JSON.stringify(data),
     );
 }

@@ -11,13 +11,18 @@ const init = async () => {
 
   const matchups = await fetchMatchups(useHttp);
   const rosters = await fetchRosters(useHttp);
+
+  const data = {
+    matchups: matchups,
+    rosters: rosters,
+  }
   console.log('got all data!!')
-  // const rosters = await fetchRosters();
-  //doCalculations(matchups);
+  doCalculations(data);
 };
 
 const doCalculations = (data) => {
   const averageScorePerLoss = calculateAverageScorePerLoss(data);
+  console.log('AverageScorePerLoss:', averageScorePerLoss)
 };
 
 const calculateAverageScorePerLoss = (matchupData) => {
@@ -32,7 +37,6 @@ const calculateAverageScorePerLoss = (matchupData) => {
   };
 
   const matchupsArray = createMatchupsArray(matchupData);
-  console.log(matchupsArray);
 };
 
 const replaceRosterIdWithPlayerName = () => { };
