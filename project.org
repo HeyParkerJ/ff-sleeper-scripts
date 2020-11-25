@@ -1,0 +1,4 @@
+* Roadmap
+** TODO - Add Express, expose endpoints
+** TODO - Add slack integration
+** TODO - Convert to typescript
