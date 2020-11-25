@@ -6,9 +6,13 @@ This was bootstraped with Robin Wieruch's [minimal-node-js-babel-setup](https://
 
 ## Installation
 
-* `git clone git@github.com:rwieruch/minimal-node-application.git`
+* `git clone https://github.com/HeyParkerJ/ff-sleeper-scripts.git`
 * `cd ff-sleeper-scripts`
 * `npm install`
 * `npm run dev`
 * OR
 * `npm run start`
+
+There is also support for saving mock responses of any of Sleeper's API calls so we don't spam them in dev. To rebuild the mocks, run
+
+* `npm run write:mocks`
