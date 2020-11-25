@@ -25,18 +25,37 @@ const doCalculations = (data) => {
   console.log('AverageScorePerLoss:', averageScorePerLoss)
 };
 
-const calculateAverageScorePerLoss = (matchupData) => {
-  const createMatchupsArray = (input) => {
-    return input.map((i) => {
-      return {
-        roster_id: i.roster_id,
-        points: parseFloat(i.points).toFixed(2),
-        matchup_id: i.matchup_id,
-      };
-    });
-  };
+const calculateAverageScorePerLoss = ({ matchups, rosters }) => {
+  // TODO move this to a util file
+  const allIndiciesOf = (array, element, increment) => {
+    var indices = [];
+    var idx = array.indexOf(element);
+    while (idx != -1) {
+      if (increment) {
+        indices.push(idx + 1)
+      } else {
+        indices.push(idx);
+      }
+      idx = array.indexOf(element, idx + 1);
+    }
+    return indices;
+  }
 
-  const matchupsArray = createMatchupsArray(matchupData);
+  const results = [];
+  for (const rosterId in rosters) {
+    const roster = rosters[rosterId];
+    const record = roster.metadata.record;
+    const weeksLost = allIndiciesOf(record.split(''), 'L', true);
+    console.log('weeksLost', weeksLost)
+    const totalScored = weeksLost.reduce((acc, week) => {
+      acc = acc + matchups[week][0].points;
+      return acc;
+    }, 0)
+
+    const averageScorePerLoss = totalScored / weeksLost.length;
+    results.push({ roster_id: rosterId, averageScorePerLoss: averageScorePerLoss })
+  }
+  return results;
 };
 
 const replaceRosterIdWithPlayerName = () => { };
