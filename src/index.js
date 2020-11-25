@@ -6,6 +6,11 @@ const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS' ? true : false;
 // const dest = fs.createWriteStream('./octocat.png');
 // res.body.pipe(dest);
 
+// Mine should be (120.4 + 117.64 + 163.5 + 140.34) / 4 = 135.47
+// total points = 541.88
+// user_id = 196325691560562688
+// roster_id: 6
+// [1, 3, 4, 7]
 const init = async () => {
   console.log('Initializing!');
 
@@ -23,11 +28,11 @@ const init = async () => {
 };
 
 const doCalculations = (data) => {
-  const averageScorePerLoss = calculateAverageScorePerLoss(data);
-  console.log('AverageScorePerLoss:', averageScorePerLoss)
+  const averagePFPerOutcome = calculateAveragePFPerOutcome(data);
+  console.log('Average PF Per Outcome', averagePFPerOutcome)
 };
 
-const calculateAverageScorePerLoss = ({ matchups, rosters, users }) => {
+const calculateAveragePFPerOutcome = ({ matchups, rosters, users }) => {
   // TODO move this to a util file
   const allIndiciesOf = (array, element, increment) => {
     var indices = [];
@@ -45,17 +50,36 @@ const calculateAverageScorePerLoss = ({ matchups, rosters, users }) => {
 
   const results = [];
   for (const rosterId in rosters) {
+    if (rosterId == 6) { console.log('debugging'); debug = true }
     const roster = rosters[rosterId];
     const record = roster.metadata.record;
     const weeksLost = allIndiciesOf(record.split(''), 'L', true);
-    const totalScored = weeksLost.reduce((acc, week) => {
-      acc = acc + matchups[week][0].points;
+    const weeksWon = allIndiciesOf(record.split(''), 'W', true);
+    const reducer = (acc, week) => {
+      let pointsScoredForThisRoster = null;
+      matchups[week].forEach((m) => {
+        if (m.roster_id == rosterId) {
+          pointsScoredForThisRoster = m.points;
+        }
+      })
+      acc = acc + pointsScoredForThisRoster;
       return acc;
-    }, 0)
+    };
+    const totalScoredInLosses = weeksLost.reduce(reducer, 0)
+    const totalScoredInWins = weeksWon.reduce(reducer, 0)
 
-    const averageScorePerLoss = totalScored / weeksLost.length;
+    const averagePFPerLoss = totalScoredInLosses / weeksLost.length;
+    const averagePFPerWin = totalScoredInWins / weeksWon.length;
     const userId = roster.owner_id;
-    results.push({ userId: userId, averageScorePerLoss: averageScorePerLoss })
+    results.push(
+      {
+        userId: userId,
+        averagePFPerLoss: averagePFPerLoss,
+        lossCount: weeksLost.length,
+        averagePFPerWin: averagePFPerWin,
+        winCount: weeksWon.length,
+      }
+    )
   }
 
   const prettifiedResults = replaceUserIdWithTeamName(results, users);
@@ -70,9 +94,12 @@ const replaceUserIdWithTeamName = (arr, users) => {
     const teamName = users[a.userId].metadata.team_name;
     const displayName = users[a.userId].display_name;
     const name = teamName ? teamName : displayName;
+    delete a.userId;
     return {
       team: name,
-      averageScorePerLoss: a.averageScorePerLoss.toFixed(2),
+      ...a,
+      averagePFPerLoss: a.averagePFPerLoss.toFixed(2),
+      averagePFPerWin: a.averagePFPerWin.toFixed(2),
     }
   })
 };
