@@ -1,15 +1,18 @@
-# Simple Node Application
+# Fantasy Football Sleeper Scripts
 
-[![Build Status](https://travis-ci.org/rwieruch/minimal-node-application.svg?branch=master)](https://travis-ci.org/rwieruch/minimal-node-application) [![Slack](https://slack-the-road-to-learn-react.wieruch.com/badge.svg)](https://slack-the-road-to-learn-react.wieruch.com/) [![Greenkeeper badge](https://badges.greenkeeper.io/rwieruch/minimal-node-application.svg)](https://greenkeeper.io/)
+This is a project I use to run data calculations on Sleeper's API and gather interesting data for my fantasy league. I only have a faint idea of the direction I will be taking this, so this readme is intentionally light right now. To get a rough idea of what I have planned, look in [project.org](project.org).
 
-An easy way to get started with JavaScript on the command line. [Read more about it](https://www.robinwieruch.de/minimal-node-js-babel-setup).
-
-[![Edit minimal-react-webpack-babel-setup](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/s/github/rwieruch/minimal-node-application/tree/master/?fontsize=14)
+This was bootstraped with Robin Wieruch's [minimal-node-js-babel-setup](https://www.robinwieruch.de/minimal-node-js-babel-setup)
 
 ## Installation
 
-* `git clone git@github.com:rwieruch/minimal-node-application.git`
-* `cd minimal-node-application`
+* `git clone https://github.com/HeyParkerJ/ff-sleeper-scripts.git`
+* `cd ff-sleeper-scripts`
 * `npm install`
-* `npm start`
-* optional: include *.env* in your *.gitignore*
+* `npm run dev`
+* OR
+* `npm run start`
+
+There is also support for saving mock responses of any of Sleeper's API calls so we don't spam them in dev. To rebuild the mocks, run
+
+* `npm run write:mocks`
