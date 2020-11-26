@@ -1,5 +1,7 @@
 import 'dotenv/config';
 import { fetchMatchups, fetchRosters, fetchUsers } from './http/index';
+import express from 'express';
+import cors from 'cors';
 
 const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS'
   || process.env.NODE_ENV === 'PROD'
@@ -10,25 +12,34 @@ const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS'
 // const dest = fs.createWriteStream('./octocat.png');
 // res.body.pipe(dest);
 
-const init = async () => {
-  console.log('Initializing!');
+const app = express();
+app.use(cors());
 
+app.get('/isAlive', (req, res) => {
+  res.send(true);
+});
+
+app.get('/stats/averagePFPerOutcome', async (req, res) => {
+  const data = await fetchData(true, false);
+  const result = doCalculations(data);
+  res.send(result);
+})
+
+const fetchData = async (useHttp, writeMocks) => {
   const matchups = await fetchMatchups(useHttp);
   const rosters = await fetchRosters(useHttp);
   const users = await fetchUsers(useHttp);
 
-  const data = {
+  return {
     matchups: matchups,
     rosters: rosters,
     users: users,
-  }
-  console.log('got all data!!')
-  doCalculations(data);
+  };
 };
 
 const doCalculations = (data) => {
   const averagePFPerOutcome = calculateAveragePFPerOutcome(data);
-  console.log('Average PF Per Outcome', averagePFPerOutcome)
+  return averagePFPerOutcome;
 };
 
 const calculateAveragePFPerOutcome = ({ matchups, rosters, users }) => {
@@ -49,7 +60,6 @@ const calculateAveragePFPerOutcome = ({ matchups, rosters, users }) => {
 
   const results = [];
   for (const rosterId in rosters) {
-    if (rosterId == 6) { console.log('debugging'); debug = true }
     const roster = rosters[rosterId];
     const record = roster.metadata.record;
     const weeksLost = allIndiciesOf(record.split(''), 'L', true);
@@ -102,4 +112,7 @@ const replaceUserIdWithTeamName = (arr, users) => {
     }
   })
 };
-init();
+
+app.listen(process.env.PORT, () => {
+  console.log('Listening on 3000 now')
+})
