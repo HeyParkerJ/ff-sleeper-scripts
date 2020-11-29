@@ -1,6 +1,13 @@
 * Roadmap
-** TODO - Add Express, expose endpoints
+** TODO - Pull in the following Sleeper APIs
+- [ ] League settings
+  GET https://api.sleeper.app/v1/league/<league_id>
+
+
+
 ** TODO - Add slack integration
 ** TODO - Convert to typescript
 ** TODO - Clean git history
 ** TODO - Add ranks and ordering to averagePFPerOutcome output
+** DONE - Add Express, expose endpoints
+- State "DONE"       from "TODO"       [2020-11-26 Thu 13:35]
