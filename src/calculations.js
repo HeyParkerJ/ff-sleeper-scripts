@@ -1,19 +1,7 @@
-const calculateAveragePFPerOutcome = ({ matchups, rosters, users }) => {
-    // TODO move this to a util file
-    const allIndiciesOf = (array, element, increment) => {
-        var indices = [];
-        var idx = array.indexOf(element);
-        while (idx != -1) {
-            if (increment) {
-                indices.push(idx + 1)
-            } else {
-                indices.push(idx);
-            }
-            idx = array.indexOf(element, idx + 1);
-        }
-        return indices;
-    }
+import { allIndiciesOf } from './dataUtils';
+import { replaceUserIdWithTeamName } from './displayUtils';
 
+const calculateAveragePFPerOutcome = ({ matchups, rosters, users }) => {
     const results = [];
     for (const rosterId in rosters) {
         const roster = rosters[rosterId];
@@ -63,24 +51,6 @@ const calculateStandardDeviation = (data) => {
 
 }
 
-// TODO - Move this to a data massaging util file
-/*
- * Needs an array of objects with a userId: userId field
- */
-const replaceUserIdWithTeamName = (arr, users) => {
-    return arr.map((a) => {
-        const teamName = users[a.userId].metadata.team_name;
-        const displayName = users[a.userId].display_name;
-        const name = teamName ? teamName : displayName;
-        delete a.userId;
-        return {
-            team: name,
-            ...a,
-            averagePFPerLoss: a.averagePFPerLoss.toFixed(2),
-            averagePFPerWin: a.averagePFPerWin.toFixed(2),
-        }
-    })
-};
 module.exports = {
     calculateAveragePFPerOutcome
 }
