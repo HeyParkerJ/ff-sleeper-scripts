@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { mockFetchData, writeMockData } from './mockUtils';
 
-const httpFetchMatchups = async () => {
+const httpFetchMatchups = async (writeMocks) => {
     const weeks = 13;
     const matchups = {};
     for (var i = 1; i <= weeks; ++i) {
@@ -10,13 +10,13 @@ const httpFetchMatchups = async () => {
         const matchup = await response.json();
         matchups[i] = matchup;
     }
-    if (process.env.NODE_ENV === 'WRITE_MOCKS') { writeMockData(matchups, 'matchups') }
+    if (writeMocks) { writeMockData(matchups, 'matchups') }
     return matchups;
 };
 
-const fetchMatchups = async (useHttp) => {
+const fetchMatchups = async (useHttp, writeMocks) => {
     return useHttp
-        ? await httpFetchMatchups()
+        ? await httpFetchMatchups(writeMocks)
         : mockFetchData('matchups');
 };
 

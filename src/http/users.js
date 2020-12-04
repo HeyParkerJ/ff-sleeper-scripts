@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { mockFetchData, writeMockData } from './mockUtils';
 
-const httpFetchUsers = async () => {
+const httpFetchUsers = async (writeMocks) => {
     const url = `https://api.sleeper.app/v1/league/${process.env.LEAGUE_ID}/users/`;
     const response = await fetch(url);
     const usersData = await response.json();
@@ -10,13 +10,13 @@ const httpFetchUsers = async () => {
         acc[key] = d;
         return acc;
     }, {})
-    if (process.env.NODE_ENV === 'WRITE_MOCKS') { writeMockData(users, 'users') }
+    if (writeMocks) { writeMockData(users, 'users') }
     return users;
 };
 
-const fetchUsers = async (useHttp) => {
+const fetchUsers = async (useHttp, writeMocks) => {
     return useHttp
-        ? await httpFetchUsers()
+        ? await httpFetchUsers(writeMocks)
         : mockFetchData('users');
 };
 
