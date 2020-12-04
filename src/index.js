@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { fetchMatchups, fetchRosters, fetchUsers } from './http/index';
-import { calculateAveragePFPerOutcome } from './calculations'
+import { performScoreCalculations } from './calculations'
 import express from 'express';
 import cors from 'cors';
 
@@ -39,8 +39,8 @@ const fetchData = async (useHttp, writeMocks) => {
 };
 
 const doCalculations = (data) => {
-  const averagePFPerOutcome = calculateAveragePFPerOutcome(data);
-  return averagePFPerOutcome;
+  const scoreCalculations = performScoreCalculations(data);
+  return scoreCalculations;
 };
 
 
