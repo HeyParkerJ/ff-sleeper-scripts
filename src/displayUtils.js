@@ -15,12 +15,18 @@ export const replaceUserIdWithTeamName = (arr, users) => {
 };
 
 export const makeNumbersDisplayReady = (arr) => {
+    const passesCheck = (ak) => {
+        return typeof ak === 'number' &&
+            ak !== parseInt(ak) &&
+            ak.toString().indexOf('.') !== -1
+    }
     return arr.map((a) => {
         for (const key in a) {
+            if (key === 'scores') {
+                a[key] = a[key].map(ak => ak ? ak.toFixed(2) : null);
+            }
             const ak = a[key];
-            if (a[key] !== undefined &&
-                ak !== parseInt(ak) &&
-                ak.toString().indexOf('.') !== -1) {
+            if (passesCheck(ak)) {
                 a[key] = a[key].toFixed(2); // Is this mutation evil? Not sure...
             }
         }
