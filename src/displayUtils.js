@@ -10,8 +10,20 @@ export const replaceUserIdWithTeamName = (arr, users) => {
         return {
             team: name,
             ...a,
-            averagePFPerLoss: a.averagePFPerLoss.toFixed(2),
-            averagePFPerWin: a.averagePFPerWin.toFixed(2),
         }
     })
 };
+
+export const makeNumbersDisplayReady = (arr) => {
+    return arr.map((a) => {
+        for (const key in a) {
+            const ak = a[key];
+            if (a[key] !== undefined &&
+                ak !== parseInt(ak) &&
+                ak.toString().indexOf('.') !== -1) {
+                a[key] = a[key].toFixed(2); // Is this mutation evil? Not sure...
+            }
+        }
+        return a;
+    })
+}

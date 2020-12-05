@@ -1,48 +1,80 @@
 import { allIndiciesOf } from './dataUtils';
-import { replaceUserIdWithTeamName } from './displayUtils';
+import { replaceUserIdWithTeamName, makeNumbersDisplayReady } from './displayUtils';
+
+const createWinLossObj = (record) => {
+    const winLossArray = record.split('');
+    return {
+        winLossArray: winLossArray,
+        weeksLost: allIndiciesOf(winLossArray, 'L', true),
+        weeksWon: allIndiciesOf(winLossArray, 'W', true),
+        weeksTied: allIndiciesOf(winLossArray, 'T', true),
+    }
+}
 const performScoreCalculations = ({ matchups, rosters, users }) => {
     const results = [];
     for (const rosterId in rosters) {
         const roster = rosters[rosterId];
         const record = roster.metadata.record;
-        const weeksLost = allIndiciesOf(record.split(''), 'L', true);
-        const weeksWon = allIndiciesOf(record.split(''), 'W', true);
+        const winLossObj = createWinLossObj(record);
         const userId = roster.owner_id;
-        const { averagePFPerLoss, averagePFPerWin } = calculateAveragePFPerOutcome(weeksLost, weeksWon, matchups, rosterId);
+        //const { averagePFPerLoss, averagePFPerWin } = calculateAveragePFPerOutcome(winLossObj.weeksLost, winLossObj.weeksWon, matchups, rosterId);
+        const scoresObject = createScoresObject(matchups, winLossObj, rosterId);
+
         results.push(
             {
                 userId: userId,
-                averagePFPerLoss: averagePFPerLoss,
-                lossCount: weeksLost.length,
-                averagePFPerWin: averagePFPerWin,
-                winCount: weeksWon.length,
+                ...scoresObject
             }
         )
     }
 
-    const prettifiedResults = replaceUserIdWithTeamName(results, users);
+    let prettifiedResults = replaceUserIdWithTeamName(results, users);
+    prettifiedResults = makeNumbersDisplayReady(prettifiedResults);
     return prettifiedResults;
 };
-const calculateAveragePFPerOutcome = (weeksLost, weeksWon, matchups, rosterId) => {
-    const reducer = (acc, week) => {
-        let pointsScoredForThisRoster = null;
+
+const createScoresObject = (matchups, winLossObj, rosterId) => {
+    let scoreInWins = 0;
+    let scoreInLosses = 0;
+    let scoreInTies = 0;
+    let totalScore = 0;
+
+    for (const week in matchups) {
         matchups[week].forEach((m) => {
-            if (m.roster_id == rosterId) {
-                pointsScoredForThisRoster = m.points;
+            const weekInt = Number.parseInt(week);
+            if (m.roster_id != rosterId) { // Yes I am using fancy string coersion. I shouldn't, though.
+                return
+            }
+
+            if (winLossObj.weeksWon.includes(weekInt)) {
+                scoreInWins = scoreInWins + m.points;
+            } else if (winLossObj.weeksLost.includes(weekInt)) {
+                scoreInLosses = scoreInLosses + m.points;
+            } else if (winLossObj.weeksTied.includes(weekInt)) {
+                scoreInTies = scoreInTies + m.points;
             }
         })
-        acc = acc + pointsScoredForThisRoster;
-        return acc;
-    };
-    const totalScoredInLosses = weeksLost.reduce(reducer, 0)
-    const totalScoredInWins = weeksWon.reduce(reducer, 0)
+    }
+    const lossCount = winLossObj.weeksLost.length;
+    const winCount = winLossObj.weeksWon.length;
+    const tieCount = winLossObj.weeksTied.length;
 
-    const averagePFPerLoss = totalScoredInLosses / weeksLost.length;
-    const averagePFPerWin = totalScoredInWins / weeksWon.length;
-    return { averagePFPerLoss, averagePFPerWin };
-};
+    const PFPerResultCalculations = {
+        totalScoreInWins: scoreInWins,
+        averagePFPerWin: Number.parseFloat(scoreInWins / winCount),
+        winCount: winCount,
+        totalScoreInLosses: scoreInLosses,
+        averagePFPerLoss: Number.parseFloat(scoreInLosses / lossCount),
+        lossCount: lossCount,
+        totalScoreInTies: scoreInTies ? scoreInTies : undefined,
+        tieCount: scoreInTies ? tieCount : undefined,
+        averagePFPerTie: scoreInTies ? Number.parseFloat(scoreInTies / tieCount) : undefined,
+    }
 
-const calculateAverageScrore = ({ matchups }) => {
+    return PFPerResultCalculations;
+}
+
+const calculateAverageScore = ({ matchups }) => {
     for (const rosterId in rosters) {
         const roster = rosters[rosterId]
         // loop over matchup[week]

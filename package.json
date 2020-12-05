@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=PROD nodemon --exec babel-node src/index.js",
-    "dev": "NODE_ENV=DEV babel-node src/index.js",
+    "dev": "NODE_ENV=DEV nodemon --exec babel-node src/index.js",
     "write:mocks": "NODE_ENV=WRITE_MOCKS babel-node src/index.js",
     "test": "echo \"No test specified\" && exit 0"
   },
