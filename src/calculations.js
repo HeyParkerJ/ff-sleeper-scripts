@@ -35,23 +35,25 @@ const createScoresObject = (matchups, rosterId, record) => {
 
     for (const week in matchups) {
         matchups[week].forEach((m) => {
-            if (m.roster_id != rosterId) { // Yes I am using fancy string coersion. I shouldn't, though.
-                return
+            if (m.roster_id != rosterId ||
+                !m.points) { // Yes I am using fancy string coersion. I shouldn't, though.
+                return;
             }
             /* Helper variables */
             const weekInt = Number.parseInt(week);
+            const points = m.points;
 
             /* Things we can do unconditionally */
-            totalScore += m.points;
-            scoresArray.push(m.points);
+            totalScore += points;
+            scoresArray.push(points);
 
             /* Conditional calculations */
             if (weeksWon.includes(weekInt)) {
-                totalScoreInWins = + m.points;
+                totalScoreInWins += points;
             } else if (weeksLost.includes(weekInt)) {
-                totalScoreInLosses = + m.points;
+                totalScoreInLosses += points;
             } else if (weeksTied.includes(weekInt)) {
-                scoreInTies = + m.points;
+                scoreInTies += points;
             }
         })
     }
