@@ -35,8 +35,8 @@ const createScoresObject = (matchups, rosterId, record) => {
 
     for (const week in matchups) {
         matchups[week].forEach((m) => {
-            if (m.roster_id != rosterId ||
-                !m.points) { // Yes I am using fancy string coersion. I shouldn't, though.
+            if (m.roster_id != rosterId || // Yes I am using fancy string coersion. I shouldn't, though.
+                !m.points) {
                 return;
             }
             /* Helper variables */
@@ -74,6 +74,7 @@ const createScoresObject = (matchups, rosterId, record) => {
         averagePFPerWin: Number.parseFloat(totalScoreInWins / winCount),
         winCount,
         weeksWon,
+        weeksLost,
         totalScoreInLosses,
         averagePFPerLoss: Number.parseFloat(totalScoreInLosses / lossCount),
         lossCount,

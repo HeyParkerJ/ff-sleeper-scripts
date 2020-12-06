@@ -20,7 +20,7 @@ app.get('/isAlive', (req, res) => {
   res.send(true);
 });
 
-app.get('/stats/averagePFPerOutcome', async (req, res) => {
+app.get('/stats/scores', async (req, res) => {
   const data = await fetchData(useHttp, false);
   const result = doCalculations(data);
   res.send(result);
@@ -46,5 +46,5 @@ const doCalculations = (data) => {
 
 
 app.listen(process.env.PORT, () => {
-  console.log('Listening on 3000 now')
+  console.log('Listening on 3001 now')
 })
