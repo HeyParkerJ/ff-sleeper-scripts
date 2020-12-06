@@ -9,6 +9,7 @@ const useHttp = process.env.NODE_ENV === 'WRITE_MOCKS'
   ? true
   : false;
 
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 // TODO - Use streams?
 // const dest = fs.createWriteStream('./octocat.png');
 // res.body.pipe(dest);
