@@ -16,12 +16,14 @@ console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 
 const app = express();
 app.use(cors());
-
+app.use((error, req, res, next) => {
+  return res.status(500).json({ error: error.toString() });
+}); 
 app.get('/isAlive', (req, res) => {
   res.send(true);
 });
 
-app.get('/stats/scores', async (req, res) => {
+app.get('/api/scores', async (req, res) => {
   const data = await fetchData(useHttp, false);
   const result = doCalculations(data);
   res.send(result);

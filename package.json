@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d dist",
-    "deploy": "pm2 stop index && npm run build && npm run start:prod",
+    "build": "NODE_ENV=PROD babel src -d dist",
+    "deploy": "npm run build && npm run start:prod",
+    "redeploy": "pm2 stop index && npm run build && npm run start:prod",
     "start:prod": "NODE_ENV=PROD && pm2 start dist/index.js",
     "start": "NODE_ENV=PROD nodemon --exec babel-node src/index.js",
     "dev": "NODE_ENV=DEV nodemon --exec babel-node src/index.js",
