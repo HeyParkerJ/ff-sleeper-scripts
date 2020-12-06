@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+	  "build": "babel src/index.js -d dist",
+	  "deploy": "npm run build && pm2 start dist/index.js",
     "start": "NODE_ENV=PROD nodemon --exec babel-node src/index.js",
     "dev": "NODE_ENV=DEV nodemon --exec babel-node src/index.js",
     "write:mocks": "NODE_ENV=WRITE_MOCKS babel-node src/index.js",
