@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-	  "build": "babel src/index.js -d dist",
-	  "deploy": "npm run build && pm2 start dist/index.js",
+    "build": "babel src -d dist",
+    "deploy": "npm run build && pm2 start dist/index.js",
     "start": "NODE_ENV=PROD nodemon --exec babel-node src/index.js",
     "dev": "NODE_ENV=DEV nodemon --exec babel-node src/index.js",
     "write:mocks": "NODE_ENV=WRITE_MOCKS babel-node src/index.js",
@@ -23,6 +23,7 @@
     "nodemon": "^1.19.4"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.12.1",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
