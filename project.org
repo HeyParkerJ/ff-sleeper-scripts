@@ -5,6 +5,7 @@
 
 
 
+** TODO - Average is wrong
 ** TODO - Add slack integration
 ** TODO - Convert to typescript
 ** TODO - Clean git history
