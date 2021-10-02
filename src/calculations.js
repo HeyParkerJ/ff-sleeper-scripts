@@ -88,6 +88,91 @@ const createScoresObject = (matchups, rosterId, record) => {
     return PFPerResultCalculations;
 }
 
+// season,week,owner,opponent,win/loss,score
+const performCsvExportCalculations = (season, { matchups, rosters, users }) => {
+    const results = [];
+    for (const rosterId in rosters) {
+        const roster = rosters[rosterId];
+        const userId = roster.owner_id;
+        const csvExportObject = createCsvExportObject(season, matchups, rosterId);
+
+        results.push(
+            {
+                userId: userId,
+                ...scoresObject
+            }
+        )
+    }
+    
+}
+
+/* A matchup. In a 10 man leauge, there are 10 matchups per week.
+ [
+  {
+    "starters": ["421", "4035", "3242", "2133", "2449", "4531", "2257", "788", "PHI"],
+    "roster_id": 1,
+    "players": ["1352", "1387", "2118", "2133", "2182", "223", "2319", "2449", "3208", "4035", "421", "4881", "4892", "788", "CLE"],
+    "matchup_id": 2,
+    "points": 20.0 // total points for team based on league settings
+    "custom_points": null // if commissioner overrides points manually
+  },
+  ...
+]
+ */
+const createCsvExportObject = (season, matchups, rosterId) => {
+    for (const week in matchups) {
+        matchups[week].forEach((matchup) => {
+            if (matchup.roster_id != rosterId || // Yes I am using fancy string coersion. I shouldn't, though.
+                !matchup.points) {
+                return;
+            }
+            /* Helper variables */
+            const weekInt = Number.parseInt(week);
+            const points = matchup.points;
+            console.log('matchup', matchup)
+
+            createCsvExportRowObject(season, weekInt, rosterId, opponentId)
+        })
+    }
+}
+
+const createCsvExportRowObject = (season, matchupWeek, rosterId, opponentId, isWinner, pointsFor, pointsAgainst) => {
+    return {
+        season: season,
+        matchupWeek: matchupWeek,
+        userId: userId,
+        opponentId: opponentId,
+        isWinner:isWinner,
+        pointsFor: pointsFor,
+        pointsAgainst: pointsAgainst
+
+    }
+}
+
+const loopManagers = (rosters, fn) => {
+    for (const rosterId in rosters) {
+        const roster = rosters[rosterId];
+        fn();
+    }
+}
+
+const doLoops = () => {
+    loopWeeks(matchups, loopManagers(rosters, ))
+}
+
+const loopWeeks = (matchups, fn) => {
+    for (const week in matchups) {
+        matchups[week].forEach((matchup) => {
+            if (matchup.roster_id != rosterId || // Yes I am using fancy string coersion. I shouldn't, though.
+                !matchup.points) {
+                return;
+            }
+            return fn() 
+        })
+    }
+}
+
 module.exports = {
-    performScoreCalculations
+    performScoreCalculations,
+    performCsvExportCalculations
 }

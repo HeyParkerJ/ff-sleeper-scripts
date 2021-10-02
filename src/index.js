@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { fetchMatchups, fetchRosters, fetchUsers } from './http/index';
-import { performScoreCalculations } from './calculations'
+import { performScoreCalculations, performCsvExportCalculations } from './calculations'
 import express from 'express';
 import cors from 'cors';
 
@@ -21,16 +21,38 @@ app.get('/isAlive', (req, res) => {
   res.send(true);
 });
 
-app.get('/stats/scores', async (req, res) => {
-  const data = await fetchData(useHttp, false);
+app.get('/stats/scores/:season', async (req, res) => {
+  const season = req.params.season;
+  const leagueID = convertSeasonToLeagueID(season)
+  const data = await fetchData(useHttp, false, leagueID);
   const result = doCalculations(data);
   res.send(result);
 })
 
-const fetchData = async (useHttp, writeMocks) => {
-  const matchups = await fetchMatchups(useHttp, writeMocks);
-  const rosters = await fetchRosters(useHttp, writeMocks);
-  const users = await fetchUsers(useHttp, writeMocks);
+app.get('/csv/:season', async (req, res) => {
+  const season = req.params.season;
+  const leagueID = convertSeasonToLeagueID(season)
+  const data = await fetchData(useHttp, false, leagueID);
+  const result = performCsvExportCalculations(season, data);
+  res.send(result);
+})
+
+const convertSeasonToLeagueID = (season) => {
+  const seasonToLeagueIDAssociation = {
+    2020: 603631612793520128,
+    2021: 687728692536893440
+  }
+  const leagueID = seasonToLeagueIDAssociation[season]
+  if(!leagueID) {
+    throw new Error(`No leagueID found for season ${season}`)
+  }
+  return leagueID
+}
+
+const fetchData = async (useHttp, writeMocks, leagueID) => {
+  const matchups = await fetchMatchups(useHttp, writeMocks, leagueID);
+  const rosters = await fetchRosters(useHttp, writeMocks, leagueID);
+  const users = await fetchUsers(useHttp, writeMocks, leagueID);
 
   return {
     matchups: matchups,

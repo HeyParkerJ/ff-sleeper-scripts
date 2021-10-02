@@ -1,11 +1,11 @@
 import fetch from 'node-fetch';
 import { mockFetchData, writeMockData } from './mockUtils';
 
-const httpFetchMatchups = async (writeMocks) => {
+const httpFetchMatchups = async (writeMocks, leagueID) => {
     const weeks = 13;
     const matchups = {};
     for (var i = 1; i <= weeks; ++i) {
-        const url = `https://api.sleeper.app/v1/league/${process.env.LEAGUE_ID}/matchups/${i}`;
+        const url = `https://api.sleeper.app/v1/league/${leagueID}/matchups/${i}`;
         const response = await fetch(url);
         const matchup = await response.json();
         matchups[i] = matchup;

@@ -1,3 +1,28 @@
+* Scratchpad
+** When creating a CSV of data for consumption for excel. A potential mental model for optimizing looping
+- Season (has many)
+- Weeks (has many)
+- Matchups (has two)
+- Managers - Who all have:
+  + Opponent
+  + Score
+  + PointsAgainst
+  + isWinner
+
+All high level objects in the tree above can be looped over and their value in the loop passed on to the next level.
+
+- Season (has many)
+  + Loop at the point where we fetch the seasons from Sleeper
+- Weeks (has many)
+  + Loop inside a high level "perform work" function
+- Matchups (has two)
+  + Loop underneath
+- Managers - Who all have:
+  + Opponent
+  + Score
+  + PointsAgainst
+  + isWinner
+
 * Roadmap
 ** TODO - Pull in the following Sleeper APIs
 - [ ] League settings

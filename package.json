@@ -4,13 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "babel src -d dist",
+    "build": "NODE_ENV=PROD babel src -d dist",
     "deploy": "pm2 stop index && npm run build && npm run start:prod",
     "start:prod": "NODE_ENV=PROD && pm2 start dist/index.js",
     "start": "NODE_ENV=PROD nodemon --exec babel-node src/index.js",
     "dev": "NODE_ENV=DEV nodemon --exec babel-node src/index.js",
     "write:mocks": "NODE_ENV=WRITE_MOCKS babel-node src/index.js",
-    "test": "echo \"No test specified\" && exit 0"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +22,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.9.5",
     "babel-plugin-transform-node-env-inline": "^0.4.3",
+    "jest": "^27.2.0",
     "nodemon": "^1.19.4"
   },
   "dependencies": {
