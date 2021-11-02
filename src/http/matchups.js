@@ -14,9 +14,9 @@ const httpFetchMatchups = async (writeMocks, leagueID) => {
     return matchups;
 };
 
-const fetchMatchups = async (useHttp, writeMocks) => {
+const fetchMatchups = async (useHttp, writeMocks, leagueID) => {
     return useHttp
-        ? await httpFetchMatchups(writeMocks)
+        ? await httpFetchMatchups(writeMocks, leagueID)
         : mockFetchData('matchups');
 };
 

@@ -39,8 +39,8 @@ app.get('/csv/:season', async (req, res) => {
 
 const convertSeasonToLeagueID = (season) => {
   const seasonToLeagueIDAssociation = {
-    2020: 603631612793520128,
-    2021: 687728692536893440
+    2020: '603631612793520128',
+    2021: '687728692536893440'
   }
   const leagueID = seasonToLeagueIDAssociation[season]
   if(!leagueID) {
