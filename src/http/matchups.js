@@ -5,7 +5,7 @@ const httpFetchMatchups = async (writeMocks) => {
     const weeks = 13;
     const matchups = {};
     for (var i = 1; i <= weeks; ++i) {
-        const url = `https://api.sleeper.app/v1/league/${process.env.LEAGUE_ID}/matchups/${i}`;
+        const url = `https://api.sleeper.app/v1/league/${leagueID}/matchups/${i}`;
         const response = await fetch(url);
         const matchup = await response.json();
         matchups[i] = matchup;
@@ -14,9 +14,9 @@ const httpFetchMatchups = async (writeMocks) => {
     return matchups;
 };
 
-const fetchMatchups = async (useHttp, writeMocks) => {
+const fetchMatchups = async (useHttp, leagueID, writeMocks) => {
     return useHttp
-        ? await httpFetchMatchups(writeMocks)
+        ? await httpFetchMatchups(writeMocks, leagueID)
         : mockFetchData('matchups');
 };
 

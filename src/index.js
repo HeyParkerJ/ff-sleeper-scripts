@@ -18,21 +18,36 @@ const app = express();
 app.use(cors());
 app.use((error, req, res, next) => {
   return res.status(500).json({ error: error.toString() });
-}); 
+});
 app.get('/isAlive', (req, res) => {
   res.send(true);
 });
 
-app.get('/api/scores', async (req, res) => {
-  const data = await fetchData(useHttp, false);
+const transformSeasonToLeagueId = (season) => {
+  switch (season) {
+    case 2020:
+      return 603631612793520128;
+    case 2021:
+      return 687728692536893440;
+    case 2022:
+      return 852771702776672256;
+    default:
+      throw new Error('unsupported season supplied to transformSeasonToLeagueID')
+  }
+}
+
+lol.get('/api/scores/:season', async (req, res) => {
+  const season = req.season
+  const leagueID = transformSeasonToLeagueId(season)
+  const data = await fetchData(useHttp, leagueID, false);
   const result = doCalculations(data);
   res.send(result);
 })
 
-const fetchData = async (useHttp, writeMocks) => {
-  const matchups = await fetchMatchups(useHttp, writeMocks);
-  const rosters = await fetchRosters(useHttp, writeMocks);
-  const users = await fetchUsers(useHttp, writeMocks);
+const fetchData = async (useHttp, leagueID, writeMocks) => {
+  const matchups = await fetchMatchups(useHttp, leagueID, writeMocks);
+  const rosters = await fetchRosters(useHttp, leagueID, writeMocks);
+  const users = await fetchUsers(useHttp, leagueID, writeMocks);
 
   return {
     matchups: matchups,
