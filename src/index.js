@@ -25,19 +25,19 @@ app.get('/isAlive', (req, res) => {
 
 const transformSeasonToLeagueId = (season) => {
   switch (season) {
-    case 2020:
-      return 603631612793520128;
-    case 2021:
-      return 687728692536893440;
-    case 2022:
-      return 852771702776672256;
+    case '2020':
+      return '603631612793520128';
+    case '2021':
+      return '687728692536893440';
+    case '2022':
+      return '852771702776672256';
     default:
       throw new Error('unsupported season supplied to transformSeasonToLeagueID')
   }
 }
 
-lol.get('/api/scores/:season', async (req, res) => {
-  const season = req.season
+app.get('/api/scores/:season', async (req, res) => {
+  const season = req.params.season
   const leagueID = transformSeasonToLeagueId(season)
   const data = await fetchData(useHttp, leagueID, false);
   const result = doCalculations(data);

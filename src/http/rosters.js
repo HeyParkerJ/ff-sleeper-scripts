@@ -14,7 +14,7 @@ const httpFetchRosters = async (writeMocks, leagueID) => {
     return rosters;
 };
 
-const fetchRosters = async (useHttp, leaugeID, writeMocks) => {
+const fetchRosters = async (useHttp, leagueID, writeMocks) => {
     return useHttp
         ? await httpFetchRosters(writeMocks, leagueID)
         : mockFetchData('rosters');
