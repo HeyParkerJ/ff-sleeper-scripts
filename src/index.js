@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { fetchMatchups, fetchRosters, fetchUsers } from './http/index';
+import { fetchMatchups, fetchRosters, fetchUsers, fetchLeague } from './http/index';
 import { performScoreCalculations } from './calculations'
 import express from 'express';
 import cors from 'cors';
@@ -45,7 +45,9 @@ app.get('/api/scores/:season', async (req, res) => {
 })
 
 const fetchData = async (useHttp, leagueID, writeMocks) => {
-  const matchups = await fetchMatchups(useHttp, leagueID, writeMocks);
+  const leagueData = await fetchLeague(useHttp, leagueID, writeMocks);
+  const weeksOfRegularSeason = leagueData.settings.playoff_week_start - 1;
+  const matchups = await fetchMatchups(useHttp, leagueID, weeksOfRegularSeason, writeMocks);
   const rosters = await fetchRosters(useHttp, leagueID, writeMocks);
   const users = await fetchUsers(useHttp, leagueID, writeMocks);
 
